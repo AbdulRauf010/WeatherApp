@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BiCurrentLocation } from "react-icons/bi";
 
 const Inputs = ({ setQuery, setUnits }) => {
   const [city, setCity] = useState("");
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const savedHistory =
+      JSON.parse(localStorage.getItem("weatherHistory")) || [];
+    setHistory(savedHistory);
+    console.log(savedHistory);
+  }, []);
 
   const handleSearchClick = () => {
-    if (city !== "") setQuery({ q: city });
-    setCity("");
+    if (city !== "") {
+      const newEntry = { type: "city", value: city };
+      const newHistory = [...history, newEntry];
+      localStorage.setItem("weatherHistory", JSON.stringify(newHistory));
+      setHistory(newHistory);
+      setQuery({ q: city });
+      console.log("Updated history in localStorage:", newHistory);
+      setCity("");
+    }
   };
 
   const handleLocationClick = () => {
@@ -15,7 +30,12 @@ const Inputs = ({ setQuery, setUnits }) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
+          const newEntry = { type: "location", value: { latitude, longitude } };
+          const newHistory = [...history, newEntry];
+          localStorage.setItem("weatherHistory", JSON.stringify(newHistory));
+          setHistory(newHistory);
           setQuery({ lat: latitude, lon: longitude });
+          console.log("Updated history in localStorage:", newHistory);
         },
         (error) => {
           console.error("Error getting location:", error);

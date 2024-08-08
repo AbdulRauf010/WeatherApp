@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Button from "../components/Button";
+import History from "./History";
 
 const Home = () => {
   const [query, setQuery] = useState({ q: "Lahore" });
@@ -34,6 +35,7 @@ const Home = () => {
     <div className="mx-auto rounded-lg max-w-screen-lg mt-2 py-5 px-32 bg-gradient-to-br shadow-xl shadow-orange-400 bg-gradient-to-r from-yellow-600 to-orange-600">
       <TopButtons setQuery={setQuery} />
       <Inputs setQuery={setQuery} setUnits={setUnits} />
+
       {weather && (
         <>
           <TimeandLocation weather={weather} />
